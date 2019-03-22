@@ -33,11 +33,8 @@ app.post('/patch', (req, res) => {
 
 app.get('/patches/all', (req, res) => {
   var listOfPatches = new Array
-    Patch.find().then(result => {
-    result.forEach(element => {
-      listOfPatches.push(element)
-    });
-    res.send(listOfPatches + `Got ${result.length} patches`);
+    Patch.find().then(result => {;
+    res.json(result);
   });
 });
 
