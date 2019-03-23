@@ -14,6 +14,7 @@ var patchSchema = new Schema({
 const Patch = mongoose.model('Patch', patchSchema);
 
 app.use(express.static('views'))
+app.use("/images",express.static('images'))
 app.use(bodyParser())
 
 // if mongoose < 5.x, force ES6 Promise
@@ -24,19 +25,18 @@ mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PWD}@${proce
   console.log('Connection to db failed: ' + err);
 });
 
+app.get('/patches/all', (req, res) => {
+    Patch.find().then(result => {
+    res.json(result);
+  });
+});
+
 app.post('/', (req, res) => {
   console.log(req.body)
   Patch.create(req.body).then(post => {
      console.log(post.id);
   });
   res.sendfile(__dirname + '/views/index.html')
-});
-
-app.get('/patches/all', (req, res) => {
-  var listOfPatches = new Array
-    Patch.find().then(result => {;
-    res.json(result);
-  });
 });
 
 //Postman Post: http://localhost:3000/upload
