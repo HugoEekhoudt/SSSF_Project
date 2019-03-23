@@ -6,5 +6,4 @@ http.onreadystatechange = (error)=> {
     JSON.parse(http.response).forEach(element => {
         document.querySelector('.tab-content').innerHTML += "<h1>"+element.name+ " </h1>     "
     });
-   
 }

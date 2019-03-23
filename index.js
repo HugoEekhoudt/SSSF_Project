@@ -24,11 +24,12 @@ mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PWD}@${proce
   console.log('Connection to db failed: ' + err);
 });
 
-app.post('/patch', (req, res) => {
+app.post('/', (req, res) => {
+  console.log(req.body)
   Patch.create(req.body).then(post => {
      console.log(post.id);
   });
-  res.send("Patch Created.")
+  res.sendfile(__dirname + '/views/index.html')
 });
 
 app.get('/patches/all', (req, res) => {
