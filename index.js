@@ -31,8 +31,14 @@ app.get('/patches/all', (req, res) => {
   });
 });
 
-app.post('/', (req, res) => {
+app.post('/search', (req, res) => {
   console.log(req.body)
+  Patch.find({name: { $regex: '.*' + req.body.searchField + '.*' }}).then(result => {
+  res.json(result);
+});
+});
+
+app.post('/createPatch', (req, res) => {
   Patch.create(req.body).then(post => {
      console.log(post.id);
   });

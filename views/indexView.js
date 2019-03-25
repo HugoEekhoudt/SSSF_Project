@@ -13,5 +13,4 @@ http.onreadystatechange = (error)=> {
         </div>`
     });
     }
-
 }

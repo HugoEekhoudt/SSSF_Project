@@ -3,32 +3,20 @@
 <head>
     <meta  charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>create</title>
+    <title>update</title>
 </head>
 <body>
         <div class="container">
-                <div class="row">
-                    <div class="col">
-                        <ul class="nav nav-tabs" id="myTabs">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/">View</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" href="/createPatch.html">Add</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/updatePatch.html">Update</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="tab-content">
-                        <form method="POST" action="/createPatch">
+                <div class="page-content">
+                        <form method="PATCH" action="/">
                             patch name:<br>
                             <input type="text" name="name">
                             <br>
                             patch description:<br>
                             <input type="text" name="description">
+                            <br>
+                            <br>
+                            change image:<input type="checkbox" name="image">
                             <br>
                             image:<br>
                             <input type="file" name="image">
