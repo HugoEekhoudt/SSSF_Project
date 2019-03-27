@@ -31,8 +31,13 @@ app.get('/patches/all', (req, res) => {
   });
 });
 
-app.post('/search', (req, res) => {
-  console.log(req.body)
+app.get('/search/patch', (req, res) => {
+  Patch.find({name: { $regex: '.*' + req.query.searchField + '.*' }}).then(result => {
+  res.json(result);
+});
+});
+
+app.delete('/rest/PatchService/patches', (req, res) => {
   Patch.find({name: { $regex: '.*' + req.body.searchField + '.*' }}).then(result => {
   res.json(result);
 });
