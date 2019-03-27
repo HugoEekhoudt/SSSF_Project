@@ -38,9 +38,10 @@ app.get('/search/patch', (req, res) => {
 });
 
 app.delete('/rest/PatchService/patches', (req, res) => {
-  Patch.find({name: { $regex: '.*' + req.body.searchField + '.*' }}).then(result => {
+  Patch.find({_id:req.query.idToDelete }).remove().exec();
+  Patch.find().then(result => {
   res.json(result);
-});
+  });
 });
 
 app.post('/createPatch', (req, res) => {
