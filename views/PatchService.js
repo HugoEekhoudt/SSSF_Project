@@ -1,5 +1,5 @@
 const http = new XMLHttpRequest();
-const url ='http://localhost:3000/patches/all';
+const url ='/patches/all';
 http.open("Get", url);
 http.send();
 http.onreadystatechange = (error)=> {
@@ -21,7 +21,7 @@ http.onreadystatechange = (error)=> {
 function searchPatches() {
     document.querySelector('.tab-content').innerHTML = ""
     const http = new XMLHttpRequest();
-const url ='http://localhost:3000/search/patch?searchField=' + document.getElementById("sField").value;
+const url ='/search/patch?searchField=' + document.getElementById("sField").value;
 http.open("Get", url);
 http.send();
 http.onreadystatechange = (error)=> {

@@ -1,8 +1,22 @@
+const https = require('https');
+const fs = require('fs');
+
+const sslkey = fs.readFileSync('certificate/ssl-key.pem');
+const sslcert = fs.readFileSync('certificate/ssl-cert.pem')
+
+const options = {
+      key: sslkey,
+      cert: sslcert
+};
+
+
 
 require ('custom-env').env()
 var bodyParser = require('body-parser')
 const express = require('express');
 const app = express();
+const http = express();
+
 const mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
@@ -55,7 +69,8 @@ app.get('/patch', (req, res) => {
 });
 
 app.patch('/rest/PatchService/patches', (req, res) => {
- console.log(req.body)
+  console.log("test")
+ console.log(req.query)
  res.sendFile(__dirname + '/views/index.html')
   // Patch.find().then(result => {
   // res.json(result);
@@ -85,4 +100,16 @@ app.use('/upload', (req, res) => {
     res.send('something');
 });
 
-app.listen(3000);
+http.use ((req, res, next) => {
+  if (req.secure) {
+    // request was via https, so do no special handling
+    next();
+  } else {
+    // request was via http, so redirect to https
+    res.redirect('https://localhost:3001');
+  }
+});
+
+http.listen(3000);
+
+https.createServer(options, app).listen(3001);
