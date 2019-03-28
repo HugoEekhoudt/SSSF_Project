@@ -9,8 +9,6 @@ const options = {
       cert: sslcert
 };
 
-
-
 require ('custom-env').env()
 var bodyParser = require('body-parser')
 const express = require('express');
@@ -69,12 +67,20 @@ app.get('/patch', (req, res) => {
 });
 
 app.patch('/rest/PatchService/patches', (req, res) => {
-  console.log("test")
- console.log(req.query)
- res.sendFile(__dirname + '/views/index.html')
-  // Patch.find().then(result => {
-  // res.json(result);
-  // });
+  var body = new Patch.patchSchema
+  body.name = req.query.newName
+  body.description = req.query.newDescription
+  if(req.query.newImage != ''){
+    body.image = req.query.newImage
+  }
+  Patch.updateOne({_id: req.query.idToUpdate}, body, (err, data) => {
+    if (err) {
+      res.send('cant update Patch')
+    } else {
+      console.log(`Patch ${req.query.idToUpdate} updated =>`, data)
+      res.sendfile(__dirname + '/views/index.html')
+    }
+  })
 });
 
 app.post('/createPatch', (req, res) => {

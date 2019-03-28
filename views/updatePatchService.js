@@ -30,7 +30,7 @@ function updatePatch() {
   '&newDescription=' + document.getElementById("newDescription").value +
   '&newImage=' + document.getElementById("newImage").value;
   console.log(url)
-  http.open("Patch", url);
+  http.open("PATCH", url);
   http.send();
   http.onreadystatechange = (error)=> {
       if (http.readyState === 4) {
