@@ -37,11 +37,29 @@ app.get('/search/patch', (req, res) => {
 });
 });
 
+app.get('/updatePatch', (req, res) => {
+  res.sendFile(__dirname + '/views/updatePatch.html')
+});
+
 app.delete('/rest/PatchService/patches', (req, res) => {
   Patch.find({_id:req.query.idToDelete }).remove().exec();
   Patch.find().then(result => {
   res.json(result);
   });
+});
+
+app.get('/patch', (req, res) => {
+  Patch.find({_id:req.query.idToUpdate}).then(result => {
+  res.json(result);
+});
+});
+
+app.patch('/rest/PatchService/patches', (req, res) => {
+ console.log(req.body)
+ res.sendFile(__dirname + '/views/index.html')
+  // Patch.find().then(result => {
+  // res.json(result);
+  // });
 });
 
 app.post('/createPatch', (req, res) => {

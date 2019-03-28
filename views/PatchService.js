@@ -9,7 +9,7 @@ http.onreadystatechange = (error)=> {
         `<div class='card' style='width: 15rem;'> <img class='card-img-top' src='/images/${element.image}' 
         alt='Card image cap'> <div class='card-body'> <h5 class='card-title'>${element.name}
         </h5> <p class='card-text'>${element.description}</p>
-        <a href='#' class='btn btn-primary'>More Info</a>
+        <a href='/updatePatch?idToUpdate=${element._id}' class='btn btn-primary'>Edit</a>
         <form>
         <input type="button" onclick="deletePatch('${element._id}')" value="delete">
         </form>
@@ -31,7 +31,7 @@ http.onreadystatechange = (error)=> {
         `<div class='card' style='width: 15rem;'> <img class='card-img-top' src='/images/${element.image}' 
         alt='Card image cap'> <div class='card-body'> <h5 class='card-title'>${element.name}
         </h5> <p class='card-text'>${element.description}</p>
-        <a href='#' class='btn btn-primary'>More Info</a>
+        <a href='/updatePatch?idToUpdate=${element._id}' class='btn btn-primary'>Edit</a>
         <form>
         <input type="button" onclick="deletePatch('${element._id}')" value="delete">
         </form>
