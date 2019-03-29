@@ -66,20 +66,13 @@ app.get('/patch', (req, res) => {
 });
 });
 
-app.patch('/rest/PatchService/patches', (req, res) => {
-  var body = new Patch.patchSchema
-  body.name = req.query.newName
-  body.description = req.query.newDescription
-  if(req.query.newImage != ''){
-    body.image = req.query.newImage
-  }
-  Patch.updateOne({_id: req.query.idToUpdate}, body, (err, data) => {
+app.post('/rest/PatchService/patches', (req, res) => {
+  console.log(req.body)
+  Patch.updateOne({_id: req.body.idOfPatchToUpdate},{name: req.body.name, description: req.body.description, image: req.body.image}, (err, data) => {
     if (err) {
       res.send('cant update Patch')
-    } else {
-      console.log(`Patch ${req.query.idToUpdate} updated =>`, data)
-      res.sendfile(__dirname + '/views/index.html')
     }
+    res.redirect('https://localhost:3001')
   })
 });
 

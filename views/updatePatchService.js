@@ -6,7 +6,7 @@ http.onreadystatechange = (error)=> {
     if (http.readyState === 4) {
             JSON.parse(http.response).forEach(element => {
         document.querySelector('.page-content').innerHTML += `
-        <form method="PATCH" action="/rest/PatchService/patches">
+        <form method="POST" action="/rest/PatchService/patches">
         patch name:<br>
         <input type="text" value="${element.name}" id="newName" name="name">
         <br>
@@ -16,25 +16,25 @@ http.onreadystatechange = (error)=> {
         image:<br>
         <input type="file" id="newImage" value="${element.image}" name="image">
         <br><br>
-        <input type="button" onclick="updatePatch()" value="save changes">
+        <input type="submit" value="save changes">
         <input type="hidden" value="${element._id}" id="idToUpdate" name="idOfPatchToUpdate">
       </form>`
     });
     }
 }
 
-function updatePatch() {
-  const http = new XMLHttpRequest();
-  const url ='/rest/PatchService/patches?idToUpdate=' + document.getElementById("idToUpdate").value + 
-  '&newName=' + document.getElementById("newName").value +
-  '&newDescription=' + document.getElementById("newDescription").value +
-  '&newImage=' + document.getElementById("newImage").value;
-  console.log(url)
-  http.open("PATCH", url);
-  http.send();
-  http.onreadystatechange = (error)=> {
-      if (http.readyState === 4) {
-        document.querySelector('.page-content').innerHTML = 'updated'
-      }
-  }
-}
+// function updatePatch() {
+//   const http = new XMLHttpRequest();
+//   const url ='/rest/PatchService/patches?' + idToUpdate + '=document.getElementById("idToUpdate").value'
+
+//   http.open("POST", url);
+//   http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+//   http.send('newName=' + document.getElementById("newName").value +
+//   '&newDescription=' + document.getElementById("newDescription").value +
+//   '&newImage=' + document.getElementById("newImage").value);
+//   http.onreadystatechange = (error)=> {
+//       if (http.readyState === 4) {
+//         document.querySelector('.page-content').innerHTML = 'updated'
+//       }
+//   }
+// }
