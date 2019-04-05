@@ -3,19 +3,25 @@ const fs = require('fs');
 
 const sslkey = fs.readFileSync('certificate/ssl-key.pem');
 const sslcert = fs.readFileSync('certificate/ssl-cert.pem')
-
+const template = fs.readFileSync('views/index.html').toString()
 const options = {
       key: sslkey,
       cert: sslcert
 };
 
 require ('custom-env').env()
+require('dotenv').config();
+const handle = require('handlebars');
+const helmet = require('helmet');
 var bodyParser = require('body-parser')
 const express = require('express');
 const app = express();
 const http = express();
-
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
+const session = require('express-session')
+
 
 var Schema = mongoose.Schema;
 var patchSchema = new Schema({
@@ -28,6 +34,11 @@ const Patch = mongoose.model('Patch', patchSchema);
 app.use(express.static('views'))
 app.use("/images",express.static('images'))
 app.use(bodyParser())
+app.use(helmet());
+app.use(session({ secret: process.env.SessionSeed, resave: false, saveUninitialized: false }))
+app.use(passport.initialize());
+app.use(passport.session())
+app.use(bodyParser.urlencoded({extended: true}));
 
 // if mongoose < 5.x, force ES6 Promise
 // mongoose.Promise = global.Promise;
@@ -37,11 +48,62 @@ mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PWD}@${proce
   console.log('Connection to db failed: ' + err);
 });
 
-app.get('/patches/all', (req, res) => {
-    Patch.find().then(result => {
-    res.json(result);
+const login = (req, res, next) => {
+  if(req.user){
+      next()
+  }else{
+      res.redirect('/login')
+  }
+}
+
+passport.use(new LocalStrategy(
+    (username, password, done) => {
+        if (username !== process.env.USER || password !== process.env.PASS) {
+            done(null, false, {message: 'Incorrect credentials.'});
+            return;
+        }
+        return done(null, {id: process.env.USER}); // returned object usally contains something to identify the user
+    }
+));
+
+passport.serializeUser(function(user, cb) {
+  console.log('Serial')
+  cb(null, user.id);
+});
+
+passport.deserializeUser(function(id, cb) {
+  console.log('Deserial')
+  cb(null, {id: id});
+});
+
+app.get('/index', login,(req, res) => {
+  Patch.find().then(result => {
+    var index = handle.compile(template)
+    res.send(index(result))
   });
 });
+
+app.get('/createPatch', login, (req, res) => {
+  Patch.find().then(result => {
+    var patch = handle.compile(template)
+    res.send(patch(result))
+  });
+});
+
+app.post('/login', 
+  passport.authenticate('local', { 
+    successRedirect: '/index', 
+    failureRedirect: '/login' })
+);
+
+app.get('/login', (req, res) => {
+res.sendFile(__dirname + '/views/login.html')
+});
+
+app.get('/logout', function(req, res){
+  req.logout()
+  res.redirect('/login')
+})
 
 app.get('/search/patch', (req, res) => {
   Patch.find({name: { $regex: '.*' + req.query.searchField + '.*' }}).then(result => {
@@ -51,13 +113,6 @@ app.get('/search/patch', (req, res) => {
 
 app.get('/updatePatch', (req, res) => {
   res.sendFile(__dirname + '/views/updatePatch.html')
-});
-
-app.delete('/rest/PatchService/patches', (req, res) => {
-  Patch.find({_id:req.query.idToDelete }).remove().exec();
-  Patch.find().then(result => {
-  res.json(result);
-  });
 });
 
 app.get('/patch', (req, res) => {
@@ -72,31 +127,22 @@ app.post('/rest/PatchService/patches', (req, res) => {
     if (err) {
       res.send('cant update Patch')
     }
-    res.redirect('https://localhost:3001')
+    res.redirect('https://localhost:3001/index')
   })
+});
+
+app.delete('/rest/PatchService/patches', (req, res) => {
+  Patch.find({_id:req.query.idToDelete }).remove().exec();
+  Patch.find().then(result => {
+  res.json(result);
+  });
 });
 
 app.post('/createPatch', (req, res) => {
   Patch.create(req.body).then(post => {
      console.log(post.id);
   });
-  res.sendfile(__dirname + '/views/index.html')
-});
-
-//Postman Post: http://localhost:3000/upload
-app.post('/upload', (req, res, next) => {
-    //do upload
-    next();
-});
-
-app.use('/upload', (req, res, next) => {
-    //do small
-    next();
-});
-
-app.use('/upload', (req, res) => {
-    //do big
-    res.send('something');
+  res.redirect('https://localhost:3001/index')
 });
 
 http.use ((req, res, next) => {
@@ -105,7 +151,7 @@ http.use ((req, res, next) => {
     next();
   } else {
     // request was via http, so redirect to https
-    res.redirect('https://localhost:3001');
+    res.redirect('https://localhost:3001/index');
   }
 });
 

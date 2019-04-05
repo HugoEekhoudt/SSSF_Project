@@ -3,16 +3,19 @@
 <head>
     <meta  charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script type="text/javascript" src="./PatchService.js"></script>
+    <script type="text/javascript" src="./indexService.js"></script>
     <title>index</title>
 </head>
 <body data-gr-c-s-loaded="true">
   <div class="container">
+        <form method="GET" action="/logout">
+                <input type="submit" value="logout">
+        </form>
       <div class="row">
           <div class="col">
               <ul class="nav nav-tabs" id="myTabs">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/">View</a>
+                    <a class="nav-link active" href="/index">View</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/createPatch.html">Add</a>
@@ -27,7 +30,16 @@
             </form>
       </div>
       <div class="tab-content">
-
+            {{#each this}}
+            <div class='card' style='width: 15rem;'> <img class='card-img-top' src='/images/{{this.image}}' 
+                alt='Card image cap'> <div class='card-body'> <h5 class='card-title'>{{this.name}}
+                </h5> <p class='card-text'>{{this.description}}</p>
+                <a href='/updatePatch?idToUpdate={{this._id}}' class='btn btn-primary'>Edit</a>
+                <form>
+                <input type="button" onclick="deletePatch('{{this._id}}')" value="delete">
+                </form>
+                </div>
+            {{/each}}
       </div>
   </div>
 </html>

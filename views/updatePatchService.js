@@ -22,19 +22,3 @@ http.onreadystatechange = (error)=> {
     });
     }
 }
-
-// function updatePatch() {
-//   const http = new XMLHttpRequest();
-//   const url ='/rest/PatchService/patches?' + idToUpdate + '=document.getElementById("idToUpdate").value'
-
-//   http.open("POST", url);
-//   http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
-//   http.send('newName=' + document.getElementById("newName").value +
-//   '&newDescription=' + document.getElementById("newDescription").value +
-//   '&newImage=' + document.getElementById("newImage").value);
-//   http.onreadystatechange = (error)=> {
-//       if (http.readyState === 4) {
-//         document.querySelector('.page-content').innerHTML = 'updated'
-//       }
-//   }
-// }
